@@ -1,5 +1,6 @@
 import db_manager as db
 
+
 def prompt_authentication():
   username = input("enter username: ")
   password = input("enter password: ")
