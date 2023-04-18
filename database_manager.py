@@ -51,10 +51,61 @@ def login_user(username, password):
   return next(cursor)[0]
 
 
-def get_credentials(user_id, app):
-  pass
+@try_catch
+def get_all_credentials(user_id):
+  cursor.execute(
+    f"SELECT app, email, username, password FROM credentials\n"
+    f"WHERE user_id = '{user_id}'\n"
+  )
+  credentials = []
+  for record in cursor:
+    app, email, username, password = record
+    credentials.append({
+      'app' : app,
+      'email': email,
+      'username': username,
+      'password': password
+    })
+  return credentials
+  
+  
+@try_catch
+def get_credentials_from_app(user_id, app):
+  cursor.execute(
+    f"SELECT email, username, password FROM credentials\n"
+    f"WHERE user_id = '{user_id}'\n"
+    f"AND app = '{app}'\n"
+  )
+  credentials = []
+  for record in cursor:
+    email, username, password = record
+    credentials.append({
+      'app': app,
+      'email': email,
+      'username': username,
+      'password': password
+    })
+  return credentials
 
 
+
+def get_credentials_from_email(user_id, email):
+  cursor.execute(
+    f"SELECT app, email, username, password FROM credentials\n"
+    f"WHERE user_id = '{user_id}'\n"
+    f"AND email = '{email}'\n"
+  )
+  credentials = []
+  for record in cursor:
+    app, email, username, password = record
+    credentials.append({
+      'app': app,
+      'email': email,
+      'username': username,
+      'password': password
+    })
+  return credentials
+  
 def get_apps(user_id, email):
   pass
 

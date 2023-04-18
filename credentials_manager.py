@@ -1,7 +1,37 @@
 import database_manager as db
 
+
 def main():
-  user_id = None
+  def render_commands(commands):
+    print()
+    print("------ Commands ------")
+    for index, command in enumerate(commands):
+      print(f"[{index}] - {command}")
+      
+  # https://stackoverflow.com/questions/10865483/print-results-in-mysql-format-with-python
+  def render_credentials(credentials):
+    if credentials == []:
+      print("No credentials")
+      return
+      
+    column_widths = {key: len(key) for key in credentials[0].keys()}
+    for entry in credentials:
+      for key, val in entry.items():
+        column_widths[key] = max(len(val), column_widths[key])
+    table_width = sum(map(lambda x : x + 1, column_widths.values())) + 1
+    print("-" * table_width)
+    for column_name, column_length in column_widths.items():
+      print(f"|{column_name}{(column_length - len(column_name))*' '}", end="")
+    print("|")
+    print("-" * table_width)
+    for entry in credentials:
+      for key, val in entry.items():
+        print(f"|{val}{(column_widths[key] - len(val))*' '}", end="")
+      print("|")
+    print("-" * table_width)
+    
+    
+  user_id = 1 #None
   
   while not user_id:
     print()
@@ -24,37 +54,64 @@ def main():
     if not user_id:
       print("Try Again")
   
+  # make adding command easier, map command name to number 
+  COMMANDS = [
+    "get all credentials",
+    "get credentials connected to an app",
+    "get credentials connected to an email",
+    "add app credentials",
+    "update app credentials",
+    "delete app credentials",
+    "get user credentials",
+    "update user credentials",
+    "quit"
+  ]
   
   while True:
-    print()
-    print("------ Commands ------")
-    print("[1] - get credentials for an app")
-    print("[2] - get all apps connected to an email")
-    print("[3] - add app credentials")
-    print("[4] - update app credentials")
-    print("[5] - delete app credentials")
-    print("[6] - get user credentials")
-    print("[7] - update user credentials")
-    print("[q] - quit")
+    render_commands(COMMANDS)
+    command_index = input("Enter a command: ")
     
-    command = input("Enter a command: ")
+    try:
+      command = COMMANDS[int(command_index)]
+    except:
+      command = None
     
-    if command == "1" :
+    if command == "get all credentials" :
+      credentials = db.get_all_credentials(user_id)
+      if credentials is not None: 
+        render_credentials(credentials)
       continue
     
-    if command == "2" :
+    if command == "get credentials connected to an app" :
+      app = input("Enter an app: ")
+      credentials = db.get_credentials_from_app(user_id, app)
+      if credentials is not None: 
+        render_credentials(credentials)
       continue
     
-    if command == "3" :
+    if command == "get credentials connected to an email" :
+      email = input("Enter an email: ")
+      credentials = db.get_credentials_from_email(user_id, email)
+      if credentials is not None: 
+        render_credentials(credentials)
       continue
     
-    if command == "4" :
+    if command == "add app credentials" :
       continue
     
-    if command == "5" :
+    if command == "update app credentials" :
       continue
     
-    if command == "q":
+    if command == "delete app credentials":
+      continue
+    
+    if command == "get user credentials":
+      continue
+    
+    if command == "update user credentials":
+      continue
+    
+    if command == "quit":
       continue
     
     print("Try Again")
