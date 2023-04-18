@@ -1,8 +1,15 @@
-def get_encrypted_password(password):
+import config
+import os
+
+ENCRYPTION_KEY = os.environ.get("ENCRYPTION_KEY")
+
+def encrypt(plaintext):
   # use ENCRYPTION_KEY to encrypt a password
-  pass
+  ciphertext = plaintext
+  return ciphertext
 
 
-def get_decrypted_password(encrypted_passed):
+def decrypt(ciphertext):
   # use ENCRYPTION_KEY to decrypt a password
-  pass
+  plaintext = ciphertext
+  return plaintext

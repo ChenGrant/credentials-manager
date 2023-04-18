@@ -1,13 +1,8 @@
 from dotenv import load_dotenv
-import mysql.connector
 import os
 
-load_dotenv()
-
-db = mysql.connector.connect(
-  host=os.environ.get("HOST"), 
-  password=os.environ.get("PASSWORD"), 
-  user=os.environ.get("USER")
-)
-
-cursor = db.cursor()
+match os.environ.get("ENV"):
+  case "dev":
+    load_dotenv(".env.dev")
+  case "prod":
+    load_dotenv(".env.prod")

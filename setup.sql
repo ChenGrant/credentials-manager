@@ -4,7 +4,7 @@ USE CREDENTIALS_MANAGER;
 
 CREATE TABLE users(
 	id INT NOT NULL AUTO_INCREMENT,
-    username VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     PRIMARY KEY(id)
 );
@@ -16,5 +16,6 @@ CREATE TABLE credentials(
     email VARCHAR(255) NOT NULL,
     username VARCHAR(255),
     password VARCHAR(255) NOT NULL,
+    PRIMARY KEY(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
