@@ -1,11 +1,8 @@
 import database_manager as db
 
 
-def main():
-  def render_credentials(credentials):
-    if not credentials:
-      print("No credentials")
-      return
+def render_credentials(credentials):
+    if not credentials: return print("No credentials")
 
     col_widths = {key: max(max([len(entry[key]) for entry in credentials]), len(key)) 
                   for key in credentials[0].keys()}
@@ -13,13 +10,13 @@ def main():
     print("-"* (sum(map(lambda x : x + 1, col_widths.values())) - 1))
     for entry in credentials:
       print("|".join([val + (col_widths[key] - len(val)) * ' ' for key, val in entry.items()]))
-    
-    
-  user_id = 1 #None
+
+
+def main():
+  user_id = None
   
   while not user_id:
-    print()
-    print("------ Commands ------")
+    print("\n------ Commands ------")
     print("[s] - signup")
     print("[l] - login")
     
@@ -42,59 +39,59 @@ def main():
   while True:
     print("\n------ Commands ------")
     for command, name in {
-      "gc": "get all credentials",
-      "gca": "get credentials connected to an app",
-      "gce": "get credentials connected to an email",
-      "aac": "add app credentials",
-      "uac": "update app credentials",
-      "dac": "delete app credentials",
-      "guc": "get user credentials",
-      "uuc": "update user credentials",
+      "g": "get all app credentials",
+      "ga": "get app credentials from app",
+      "ge": "get app credentials from email",
+      "a": "add app credentials",
+      "u": "update app credentials",
+      "d": "delete app credentials",
       "q": "quit"
-    }.items():
-      print(f"[{command}] - {name}")
+    }.items(): print(f"[{command}] - {name}")
       
     command = input("Enter a command: ")
     
-    if command == "gc" :
+    if command == "g" :
       credentials = db.get_all_credentials(user_id)
       if credentials is not None: 
         render_credentials(credentials)
-      continue
     
-    if command == "gca" :
+    elif command == "ga" :
       app = input("Enter an app: ")
       credentials = db.get_credentials_from_app(user_id, app)
       if credentials is not None: 
         render_credentials(credentials)
-      continue
     
-    if command == "gce" :
+    elif command == "ge" :
       email = input("Enter an email: ")
       credentials = db.get_credentials_from_email(user_id, email)
       if credentials is not None: 
         render_credentials(credentials)
-      continue
     
-    if command == "aac" :
-      continue
+    elif command == "a" :
+      app = input("Enter an app: ")
+      email = input("Enter a email: ")
+      username = input("Enter a username: ")
+      password = input("Enter a password: ")
+      if db.add_credentials(user_id, app, email, username, password): 
+        print("Credentials added")
+      
+    elif command == "u" :
+      app = input("Enter an app: ")
+      email = input("Enter a email: ")
+      username = input("Enter new username: ")
+      password = input("Enter new password: ")
+      if db.update_credentials(user_id, app, email, username, password): 
+        print("Credentials updated")
     
-    if command == "uac" :
-      continue
+    elif command == "d":
+      app = input("Enter an app: ")
+      email = input("Enter a email: ")
+      if db.delete_credentials(user_id, app, email):  
+        print("Credentials deleted")
     
-    if command == "dac":
-      continue
+    elif command == "q": break
     
-    if command == "guc":
-      continue
-    
-    if command == "uuc":
-      continue
-    
-    if command == "q":
-      continue
-    
-    print("Try Again")
+    else: print("Try Again")
     
 
 if __name__ == "__main__":
